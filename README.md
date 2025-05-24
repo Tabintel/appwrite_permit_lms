@@ -6,10 +6,10 @@ This project demonstrates how to implement fine-grained authorization in a Learn
 
 The application follows this architecture:
 
-1. **Frontend (Next.js)**: Provides the user interface for students, teachers, and admins.
-2. **Backend (Go)**: Handles business logic as Appwrite Cloud Functions.
-3. **Appwrite**: Provides authentication and database services.
-4. **Permit.io**: Manages fine-grained authorization policies.
+1. **Backend (Go)**: Handles business logic as Appwrite Cloud Functions.
+2. **Appwrite**: Provides authentication and database services.
+3. **Permit.io**: Manages fine-grained authorization policies.
+4. **Frontend (Next.js)**: Provides the user interface for students, teachers, and admins.
 
 ## Features
 
@@ -35,23 +35,6 @@ The application follows this architecture:
 - Appwrite instance
 - Permit.io account
 
-### Environment Variables
-
-Create a `.env.local` file in the frontend directory with the following variables:
-
-\`\`\`
-NEXT_PUBLIC_APPWRITE_ENDPOINT=https://your-appwrite-instance.com/v1
-NEXT_PUBLIC_APPWRITE_PROJECT_ID=your-project-id
-NEXT_PUBLIC_APPWRITE_DATABASE_ID=your-database-id
-\`\`\`
-
-### Running the Frontend
-
-\`\`\`bash
-cd frontend
-npm install
-npm run dev
-\`\`\`
 
 ### Deploying the Backend Functions
 
@@ -59,7 +42,7 @@ npm run dev
 2. Login to your Appwrite instance
 3. Deploy the functions:
 
-\`\`\`bash
+```bash
 cd backend/functions
 appwrite functions create get_courses --runtime go-1.19 --entrypoint main
 appwrite functions create create_course --runtime go-1.19 --entrypoint main
@@ -67,26 +50,44 @@ appwrite functions create enroll_course --runtime go-1.19 --entrypoint main
 appwrite functions create get_assignments --runtime go-1.19 --entrypoint main
 appwrite functions create submit_assignment --runtime go-1.19 --entrypoint main
 appwrite functions create grade_assignment --runtime go-1.19 --entrypoint main
-\`\`\`
+```
 
 4. Set environment variables for each function:
 
-\`\`\`bash
+```bash
 appwrite functions createVariable get_courses APPWRITE_API_KEY "your-api-key"
 appwrite functions createVariable get_courses PERMIT_TOKEN "your-permit-token"
 appwrite functions createVariable get_courses PERMIT_ENV "your-permit-environment"
 appwrite functions createVariable get_courses PERMIT_PDP_ADDRESS "your-permit-pdp-address"
-\`\`\`
+```
 
 Repeat for all functions.
 
 5. Deploy the function code:
 
-\`\`\`bash
+```bash
 appwrite functions deployments create get_courses --code ./get_courses.go
-\`\`\`
+```
 
 Repeat for all functions.
+
+### Environment Variables for the Frontend
+
+Create a `.env.local` file in the frontend directory with the following variables:
+
+```bash
+NEXT_PUBLIC_APPWRITE_ENDPOINT=https://your-appwrite-instance.com/v1
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_APPWRITE_DATABASE_ID=your-database-id
+```
+
+### Running the Frontend
+
+```bash
+cd frontend
+pnpm install
+pnpm run dev
+```
 
 ## Authorization Flow
 
@@ -131,7 +132,3 @@ Repeat for all functions.
 - `submittedAt`: Submission date
 - `grade`: Grade (0-100)
 - `feedback`: Teacher feedback
-
-## License
-
-MIT

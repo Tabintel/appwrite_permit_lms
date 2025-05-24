@@ -1,0 +1,189 @@
+{
+  "roles": {
+    "admin": {
+      "name": "Admin",
+      "description": "Administrator with full access",
+      "permissions": [
+        "course:create",
+        "course:read",
+        "course:update",
+        "course:delete",
+        "assignment:create",
+        "assignment:read",
+        "assignment:update",
+        "assignment:delete",
+        "assignment:grade",
+        "user:create",
+        "user:read",
+        "user:update",
+        "user:delete"
+      ]
+    },
+    "teacher": {
+      "name": "Teacher",
+      "description": "Teacher with access to their courses",
+      "permissions": [
+        "course:create",
+        "course:read",
+        "course:update",
+        "assignment:create",
+        "assignment:read",
+        "assignment:update",
+        "assignment:grade"
+      ]
+    },
+    "student": {
+      "name": "Student",
+      "description": "Student with access to enrolled courses",
+      "permissions": ["course:read", "course:enroll", "assignment:read", "assignment:submit"]
+    }
+  },
+  "resources": {
+    "course": {
+      "name": "Course",
+      "description": "A course in the LMS",
+      "actions": {
+        "create": {},
+        "read": {},
+        "update": {},
+        "delete": {},
+        "enroll": {}
+      },
+      "attributes": {
+        "teacherId": {
+          "type": "string"
+        },
+        "studentIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assignment": {
+      "name": "Assignment",
+      "description": "An assignment in a course",
+      "actions": {
+        "create": {},
+        "read": {},
+        "update": {},
+        "delete": {},
+        "submit": {},
+        "grade": {}
+      },
+      "attributes": {
+        "courseId": {
+          "type": "string"
+        },
+        "dueDate": {
+          "type": "string"
+        }
+      }
+    },
+    "user": {
+      "name": "User",
+      "description": "A user in the LMS",
+      "actions": {
+        "create": {},
+        "read": {},
+        "update": {},
+        "delete": {}
+      },
+      "attributes": {
+        "role": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "conditions": {
+    "isTeacherOfCourse": {
+      "description": "Check if the user is the teacher of the course",
+      "rule": {
+        "resource.teacherId": {
+          "equals": "user.id"
+        }
+      }
+    },
+    "isStudentOfCourse": {
+      "description": "Check if the user is enrolled in the course",
+      "rule": {
+        "user.id": {
+          "in": "resource.studentIds"
+        }
+      }
+    },
+    "isBeforeDueDate": {
+      "description": "Check if the current date is before the due date",
+      "rule": {
+        "now()": {
+          "before": "resource.dueDate"
+        }
+      }
+    }
+  },
+  "policies": [
+    {
+      "description": "Admins can do anything",
+      "role": "admin",
+      "resource": "*",
+      "action": "*",
+      "effect": "allow"
+    },
+    {
+      "description": "Teachers can create courses",
+      "role": "teacher",
+      "resource": "course",
+      "action": "create",
+      "effect": "allow"
+    },
+    {
+      "description": "Teachers can manage their own courses",
+      "role": "teacher",
+      "resource": "course",
+      "action": ["read", "update"],
+      "effect": "allow",
+      "condition": "isTeacherOfCourse"
+    },
+    {
+      "description": "Teachers can create assignments for their courses",
+      "role": "teacher",
+      "resource": "assignment",
+      "action": "create",
+      "effect": "allow",
+      "condition": "isTeacherOfCourse"
+    },
+    {
+      "description": "Teachers can manage assignments for their courses",
+      "role": "teacher",
+      "resource": "assignment",
+      "action": ["read", "update", "delete", "grade"],
+      "effect": "allow",
+      "condition": "isTeacherOfCourse"
+    },
+    {
+      "description": "Students can view and enroll in courses",
+      "role": "student",
+      "resource": "course",
+      "action": ["read", "enroll"],
+      "effect": "allow"
+    },
+    {
+      "description": "Students can view assignments for enrolled courses",
+      "role": "student",
+      "resource": "assignment",
+      "action": "read",
+      "effect": "allow",
+      "condition": "isStudentOfCourse"
+    },
+    {
+      "description": "Students can submit assignments before due date",
+      "role": "student",
+      "resource": "assignment",
+      "action": "submit",
+      "effect": "allow",
+      "condition": ["isStudentOfCourse", "isBeforeDueDate"]
+    }
+  ]
+}

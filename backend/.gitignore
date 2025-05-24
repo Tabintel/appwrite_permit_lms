@@ -1,0 +1,65 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+*.pdb
+*.hprof
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+coverage/
+
+# Build
+bin/
+out/
+dist/
+
+# Local env files
+.env
+.env.*
+!env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dependencies
+vendor/
+
+# Go modules
+*.mod
+*.sum
+
+# Test
+*.test
+
+# Coverage
+coverage.out
+
+# Temporary files
+*.tmp
+
+# Appwrite SDK
+appwrite-sdk/
+
+# Cache
+.cache/
+
+# Configuration
+config.yaml
+
+# Database
+*.db
+*.sqlite

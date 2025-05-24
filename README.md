@@ -1,6 +1,6 @@
 # LMS Application with Appwrite and Permit.io
 
-This project demonstrates how to implement fine-grained authorization in a Learning Management System (LMS) using Appwrite for authentication and database, Permit.io for authorization policies, and Go for backend logic, with a Next.js frontend.
+This project is a Learning Management System (LMS) that demonstrates how to implement fine-grained authorization using Appwrite for authentication and database, Permit.io for authorization policies, and Go for backend logic, with a Next.js frontend.
 
 ## Architecture
 

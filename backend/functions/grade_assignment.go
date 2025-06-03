@@ -7,9 +7,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/appwrite/sdk-for-go/v10"
-	"github.com/appwrite/sdk-for-go/v10/database"
-	"github.com/permitio/permit-sdk-go/pkg/permit"
+	"github.com/appwrite/sdk-for-go"
+	"github.com/appwrite/sdk-for-go/database"
+	"github.com/permitio/permit-golang/pkg/permit"
 )
 
 // Submission represents a student's submission for an assignment

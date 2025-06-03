@@ -7,10 +7,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/appwrite/sdk-for-go/v10"
-	"github.com/appwrite/sdk-for-go/v10/database"
-	"github.com/appwrite/sdk-for-go/v10/query"
-	"github.com/permitio/permit-sdk-go/pkg/permit"
+	"github.com/appwrite/sdk-for-go"
+	"github.com/appwrite/sdk-for-go/database"
+	"github.com/appwrite/sdk-for-go/query"
+	"github.com/permitio/permit-golang/pkg/permit"
 )
 
 // Assignment represents an assignment in the LMS

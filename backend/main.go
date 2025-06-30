@@ -9,11 +9,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/appwrite/sdk-for-go"
+	"github.com/appwrite/go-sdk/appwrite"
+	"github.com/appwrite/go-sdk/appwrite/databases"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	permit "github.com/permitio/permit-golang"
-	permitConfig "github.com/permitio/permit-golang/config"
+	"github.com/permitio/permit-golang/pkg/permit"
+	permitConfig "github.com/permitio/permit-golang/pkg/permit/config"
+	"github.com/permitio/permit-golang/pkg/permit/models"
 )
 
 // Configuration
@@ -57,7 +59,7 @@ type User struct {
 // Service handles the core business logic of the LMS
 type LMSService struct {
 	client      *appwrite.Client
-	db          *appwrite.Database
+	db          *databases.Service
 	permit      *permit.Client
 	config      Config
 	databaseID  string
@@ -74,7 +76,7 @@ func NewLMSService(config Config) (*LMSService, error) {
 	client.SetKey(config.AppwriteAPIKey)
 
 	// Initialize Database client
-	dbClient := appwrite.NewDatabase(client)
+	dbClient := databases.New(client)
 
 	// Initialize Permit client
 	permitCfg := permitConfig.NewConfigBuilder(config.PermitToken).
@@ -304,7 +306,7 @@ func (s *LMSService) CreateCourse(w http.ResponseWriter, r *http.Request) {
 		r.Context(),
 		userID,
 		"create",
-		&permit.ResourceInput{
+		&models.ResourceInput{
 			Type: "course",
 		},
 	)
@@ -362,7 +364,7 @@ func (s *LMSService) CreateCourse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Sync with Permit.io for fine-grained access control
-	_, err = s.permit.Api.SyncResource(context.Background(), &permit.ResourceInput{
+	_, err = s.permit.Api.SyncResource(context.Background(), &models.ResourceInput{
 		Type: "course",
 		Key:  doc.Get("$id").(string),
 		Attributes: map[string]interface{}{
